@@ -1,4 +1,4 @@
-Simple-Web-Server [![Build Status](https://gitlab.com/eidheim/Simple-Web-Server/badges/master/build.svg)](https://gitlab.com/eidheim/Simple-Web-Server/pipelines)
+Simple-Web-Server
 =================
 
 A very simple, fast, multithreaded, platform independent HTTP and HTTPS server and client library implemented using C++11 and Asio (both Boost.Asio and standalone Asio can be used). Created to be an easy way to make REST resources available from C++ applications. 
