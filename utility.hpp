@@ -138,16 +138,13 @@ namespace SimpleWeb {
     static CaseInsensitiveMultimap parse(std::istream &stream) noexcept {
       CaseInsensitiveMultimap result;
       std::string line;
-      getline(stream, line);
       std::size_t param_end;
-      while((param_end = line.find(':')) != std::string::npos) {
+      while(getline(stream, line) && (param_end = line.find(':')) != std::string::npos) {
         std::size_t value_start = param_end + 1;
         while(value_start + 1 < line.size() && line[value_start] == ' ')
           ++value_start;
         if(value_start < line.size())
-          result.emplace(line.substr(0, param_end), line.substr(value_start, line.size() - value_start - 1));
-
-        getline(stream, line);
+          result.emplace(line.substr(0, param_end), line.substr(value_start, line.size() - value_start - (line.back() == '\r' ? 1 : 0)));
       }
       return result;
     }
@@ -216,9 +213,8 @@ namespace SimpleWeb {
     static bool parse(std::istream &stream, std::string &method, std::string &path, std::string &query_string, std::string &version, CaseInsensitiveMultimap &header) noexcept {
       header.clear();
       std::string line;
-      getline(stream, line);
       std::size_t method_end;
-      if((method_end = line.find(' ')) != std::string::npos) {
+      if(getline(stream, line) && (method_end = line.find(' ')) != std::string::npos) {
         method = line.substr(0, method_end);
 
         std::size_t query_start = std::string::npos;
@@ -265,9 +261,8 @@ namespace SimpleWeb {
     static bool parse(std::istream &stream, std::string &version, std::string &status_code, CaseInsensitiveMultimap &header) noexcept {
       header.clear();
       std::string line;
-      getline(stream, line);
-      std::size_t version_end = line.find(' ');
-      if(version_end != std::string::npos) {
+      std::size_t version_end;
+      if(getline(stream, line) && (version_end = line.find(' ')) != std::string::npos) {
         if(5 < line.size())
           version = line.substr(5, version_end - 5);
         else

@@ -204,6 +204,31 @@ int main() {
   }
 
   {
+    SimpleWeb::CaseInsensitiveMultimap solution;
+    std::stringstream header;
+    auto parsed = SimpleWeb::HttpHeader::parse(header);
+    assert(parsed == solution);
+  }
+  {
+    SimpleWeb::CaseInsensitiveMultimap solution = {{"Content-Type", "application/json"}};
+    std::stringstream header("Content-Type: application/json");
+    auto parsed = SimpleWeb::HttpHeader::parse(header);
+    assert(parsed == solution);
+  }
+  {
+    SimpleWeb::CaseInsensitiveMultimap solution = {{"Content-Type", "application/json"}};
+    std::stringstream header("Content-Type: application/json\r");
+    auto parsed = SimpleWeb::HttpHeader::parse(header);
+    assert(parsed == solution);
+  }
+  {
+    SimpleWeb::CaseInsensitiveMultimap solution = {{"Content-Type", "application/json"}};
+    std::stringstream header("Content-Type: application/json\r\n");
+    auto parsed = SimpleWeb::HttpHeader::parse(header);
+    assert(parsed == solution);
+  }
+
+  {
     {
       SimpleWeb::CaseInsensitiveMultimap solution;
       auto parsed = SimpleWeb::HttpHeader::FieldValue::SemicolonSeparatedAttributes::parse("");
