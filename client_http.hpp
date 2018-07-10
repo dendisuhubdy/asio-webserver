@@ -156,8 +156,8 @@ namespace SimpleWeb {
 
     class Session {
     public:
-      Session(std::size_t max_response_streambuf_size, std::shared_ptr<Connection> connection, std::unique_ptr<asio::streambuf> request_streambuf_) noexcept
-          : connection(std::move(connection)), request_streambuf(std::move(request_streambuf_)), response(new Response(max_response_streambuf_size)) {}
+      Session(std::size_t max_response_streambuf_size, std::shared_ptr<Connection> connection_, std::unique_ptr<asio::streambuf> request_streambuf_) noexcept
+          : connection(std::move(connection_)), request_streambuf(std::move(request_streambuf_)), response(new Response(max_response_streambuf_size)) {}
 
       std::shared_ptr<Connection> connection;
       std::unique_ptr<asio::streambuf> request_streambuf;
