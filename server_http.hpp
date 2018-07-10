@@ -228,8 +228,8 @@ namespace SimpleWeb {
 
       asio::streambuf streambuf;
 
-      Request(std::size_t max_request_streambuf_size, std::shared_ptr<asio::ip::tcp::endpoint> remote_endpoint) noexcept
-          : streambuf(max_request_streambuf_size), content(streambuf), remote_endpoint(std::move(remote_endpoint)) {}
+      Request(std::size_t max_request_streambuf_size, std::shared_ptr<asio::ip::tcp::endpoint> remote_endpoint_) noexcept
+          : streambuf(max_request_streambuf_size), content(streambuf), remote_endpoint(std::move(remote_endpoint_)) {}
 
     public:
       std::string method, path, query_string, http_version;
@@ -268,7 +268,7 @@ namespace SimpleWeb {
     class Connection : public std::enable_shared_from_this<Connection> {
     public:
       template <typename... Args>
-      Connection(std::shared_ptr<ScopeRunner> handler_runner, Args &&... args) noexcept : handler_runner(std::move(handler_runner)), socket(new socket_type(std::forward<Args>(args)...)) {}
+      Connection(std::shared_ptr<ScopeRunner> handler_runner_, Args &&... args) noexcept : handler_runner(std::move(handler_runner_)), socket(new socket_type(std::forward<Args>(args)...)) {}
 
       std::shared_ptr<ScopeRunner> handler_runner;
 
@@ -311,7 +311,7 @@ namespace SimpleWeb {
 
     class Session {
     public:
-      Session(std::size_t max_request_streambuf_size, std::shared_ptr<Connection> connection) noexcept : connection(std::move(connection)) {
+      Session(std::size_t max_request_streambuf_size, std::shared_ptr<Connection> connection_) noexcept : connection(std::move(connection_)) {
         if(!this->connection->remote_endpoint) {
           error_code ec;
           this->connection->remote_endpoint = std::make_shared<asio::ip::tcp::endpoint>(this->connection->socket->lowest_layer().remote_endpoint(ec));
@@ -357,7 +357,7 @@ namespace SimpleWeb {
 
     public:
       regex_orderable(const char *regex_cstr) : regex::regex(regex_cstr), str(regex_cstr) {}
-      regex_orderable(std::string regex_str) : regex::regex(regex_str), str(std::move(regex_str)) {}
+      regex_orderable(std::string regex_str_) : regex::regex(regex_str_), str(std::move(regex_str_)) {}
       bool operator<(const regex_orderable &rhs) const noexcept {
         return str < rhs.str;
       }

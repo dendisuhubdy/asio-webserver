@@ -116,8 +116,8 @@ namespace SimpleWeb {
     class Connection : public std::enable_shared_from_this<Connection> {
     public:
       template <typename... Args>
-      Connection(std::shared_ptr<ScopeRunner> handler_runner, long timeout, Args &&... args) noexcept
-          : handler_runner(std::move(handler_runner)), timeout(timeout), socket(new socket_type(std::forward<Args>(args)...)) {}
+      Connection(std::shared_ptr<ScopeRunner> handler_runner_, long timeout, Args &&... args) noexcept
+          : handler_runner(std::move(handler_runner_)), timeout(timeout), socket(new socket_type(std::forward<Args>(args)...)) {}
 
       std::shared_ptr<ScopeRunner> handler_runner;
       long timeout;
@@ -156,8 +156,8 @@ namespace SimpleWeb {
 
     class Session {
     public:
-      Session(std::size_t max_response_streambuf_size, std::shared_ptr<Connection> connection, std::unique_ptr<asio::streambuf> request_streambuf) noexcept
-          : connection(std::move(connection)), request_streambuf(std::move(request_streambuf)), response(new Response(max_response_streambuf_size)) {}
+      Session(std::size_t max_response_streambuf_size, std::shared_ptr<Connection> connection, std::unique_ptr<asio::streambuf> request_streambuf_) noexcept
+          : connection(std::move(connection)), request_streambuf(std::move(request_streambuf_)), response(new Response(max_response_streambuf_size)) {}
 
       std::shared_ptr<Connection> connection;
       std::unique_ptr<asio::streambuf> request_streambuf;
@@ -284,19 +284,19 @@ namespace SimpleWeb {
     /// Asynchronous request where setting and/or running Client's io_service is required.
     /// Do not use concurrently with the synchronous request functions.
     void request(const std::string &method, const std::string &path, string_view content,
-                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback) {
-      request(method, path, content, CaseInsensitiveMultimap(), std::move(request_callback));
+                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback_) {
+      request(method, path, content, CaseInsensitiveMultimap(), std::move(request_callback_));
     }
 
     /// Asynchronous request where setting and/or running Client's io_service is required.
     void request(const std::string &method, const std::string &path,
-                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback) {
-      request(method, path, std::string(), CaseInsensitiveMultimap(), std::move(request_callback));
+                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback_) {
+      request(method, path, std::string(), CaseInsensitiveMultimap(), std::move(request_callback_));
     }
 
     /// Asynchronous request where setting and/or running Client's io_service is required.
-    void request(const std::string &method, std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback) {
-      request(method, std::string("/"), std::string(), CaseInsensitiveMultimap(), std::move(request_callback));
+    void request(const std::string &method, std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback_) {
+      request(method, std::string("/"), std::string(), CaseInsensitiveMultimap(), std::move(request_callback_));
     }
 
     /// Asynchronous request where setting and/or running Client's io_service is required.
@@ -352,8 +352,8 @@ namespace SimpleWeb {
 
     /// Asynchronous request where setting and/or running Client's io_service is required.
     void request(const std::string &method, const std::string &path, std::istream &content,
-                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback) {
-      request(method, path, content, CaseInsensitiveMultimap(), std::move(request_callback));
+                 std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback_) {
+      request(method, path, content, CaseInsensitiveMultimap(), std::move(request_callback_));
     }
 
     /// Close connections
