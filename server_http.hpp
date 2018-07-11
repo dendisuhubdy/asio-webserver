@@ -95,16 +95,22 @@ namespace SimpleWeb {
             auto lock = self->session->connection->handler_runner->continue_lock();
             if(!lock)
               return;
-            auto it = self->send_queue.begin();
-            if(it->second)
-              it->second(ec);
             if(!ec) {
+              auto it = self->send_queue.begin();
+              if(it->second)
+                it->second(ec);
               self->send_queue.erase(it);
               if(self->send_queue.size() > 0)
                 self->send_from_queue();
             }
-            else
+            else {
+              // All handlers in the queue is called with ec:
+              for(auto &pair : self->send_queue) {
+                if(pair.second)
+                  pair.second(ec);
+              }
               self->send_queue.clear();
+            }
           }));
         });
       }
