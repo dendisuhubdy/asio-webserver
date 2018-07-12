@@ -161,7 +161,7 @@ namespace SimpleWeb {
       }
 
       /// Convenience function for writing status line, header fields, and content
-      void write(StatusCode status_code, const std::string &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {
+      void write(StatusCode status_code, string_view content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {
         *this << "HTTP/1.1 " << SimpleWeb::status_code(status_code) << "\r\n";
         write_header(header, content.size());
         if(!content.empty())
@@ -180,7 +180,7 @@ namespace SimpleWeb {
       }
 
       /// Convenience function for writing success status line, header fields, and content
-      void write(const std::string &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {
+      void write(string_view content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {
         write(StatusCode::success_ok, content, header);
       }
 

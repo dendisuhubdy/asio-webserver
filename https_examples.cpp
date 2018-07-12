@@ -106,7 +106,7 @@ int main() {
   // GET-example for the path /match/[number], responds with the matched string in path (number)
   // For instance a request GET /match/123 will receive: 123
   server.resource["^/match/([0-9]+)$"]["GET"] = [](shared_ptr<HttpsServer::Response> response, shared_ptr<HttpsServer::Request> request) {
-    response->write(request->path_match[1]);
+    response->write(request->path_match[1].str());
   };
 
   // GET-example simulating heavy work in a separate thread
