@@ -412,6 +412,20 @@ namespace SimpleWeb {
       return connection;
     }
 
+    std::pair<std::string, unsigned short> parse_host_port(const std::string &host_port, unsigned short default_port) const noexcept {
+      std::pair<std::string, unsigned short> parsed_host_port;
+      std::size_t host_end = host_port.find(':');
+      if(host_end == std::string::npos) {
+        parsed_host_port.first = host_port;
+        parsed_host_port.second = default_port;
+      }
+      else {
+        parsed_host_port.first = host_port.substr(0, host_end);
+        parsed_host_port.second = static_cast<unsigned short>(stoul(host_port.substr(host_end + 1)));
+      }
+      return parsed_host_port;
+    }
+
     virtual std::shared_ptr<Connection> create_connection() noexcept = 0;
     virtual void connect(const std::shared_ptr<Session> &) = 0;
 
@@ -432,20 +446,6 @@ namespace SimpleWeb {
       for(auto &h : header)
         write_stream << h.first << ": " << h.second << "\r\n";
       return streambuf;
-    }
-
-    std::pair<std::string, unsigned short> parse_host_port(const std::string &host_port, unsigned short default_port) const noexcept {
-      std::pair<std::string, unsigned short> parsed_host_port;
-      std::size_t host_end = host_port.find(':');
-      if(host_end == std::string::npos) {
-        parsed_host_port.first = host_port;
-        parsed_host_port.second = default_port;
-      }
-      else {
-        parsed_host_port.first = host_port.substr(0, host_end);
-        parsed_host_port.second = static_cast<unsigned short>(stoul(host_port.substr(host_end + 1)));
-      }
-      return parsed_host_port;
     }
 
     void write(const std::shared_ptr<Session> &session) {
