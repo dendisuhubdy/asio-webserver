@@ -388,7 +388,7 @@ namespace SimpleWeb {
       }
 
       for(auto it = connections.begin(); it != connections.end(); ++it) {
-        if(!(*it)->in_use && !connection) {
+        if(!(*it)->in_use) {
           connection = *it;
           break;
         }
